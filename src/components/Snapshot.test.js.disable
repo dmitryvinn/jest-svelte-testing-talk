@@ -1,0 +1,20 @@
+import { fireEvent, getByTestId, render } from "@testing-library/svelte";
+import FilterButtons from "./FilterButtons";
+
+describe("Filter Buttons", () => 
+{
+  it('should render', () => {
+
+    const { container } = render(FilterButtons);
+
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should render after Active button is pressed', async() => {
+    const { container } = render(FilterButtons);
+    const activeButton = getByTestId(container, 'button-active')
+    await fireEvent.click(activeButton);
+    expect(container).toMatchSnapshot();
+  });
+
+})

@@ -1,0 +1,38 @@
+const puppeteer = require('puppeteer');
+
+const baseUrl = 'http://localhost:5000'
+
+let browser
+let page
+
+beforeAll(async () => {
+  browser = await puppeteer.launch(
+    {
+      headless: false,
+      slowMo: 500
+    }
+  )
+  page = await browser.newPage()
+})
+
+afterAll(() => {
+    browser.close()
+  })
+
+describe('Todo List', () => {
+  it('should allow new Todo Items', async () => {
+    await page.goto(baseUrl);
+    await page.waitForSelector('.todoapp');
+
+    await page.type('#todo-0', 'Run Test');
+    await page.click('button[type=submit]');
+    await page.click('button[type=submit]');
+
+    const allTodoItemsText = await page.evaluate(
+        () => {
+            const allTodoItems = document.querySelectorAll('li[class=todo]');
+            return allTodoItems[allTodoItems.length - 2].textContent;
+        });
+    
+    expect(allTodoItemsText).contain("Run Test");
+},1000000)});
